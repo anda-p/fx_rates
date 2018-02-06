@@ -42,12 +42,6 @@ my_exchange_rate = ExchangeRate.new(MyRatesDataSource.new)
 
 All data sources must extend the RatesDataSource class and provide the following methods.
 
-An already implemented data source is the European Central Bank and can be used like
-
-```ruby
-my_exchange_rate = ExchangeRate.new(ECBRatesDataSource.new)
-```
-
 ```ruby
 load_rates
 ```
@@ -66,6 +60,12 @@ which returns a Hash of rates in the format
 where the date keys are of type Date and currency and rate are strings.
 
 The base currency for a data source that all the other rates are calculated relatively to should also appear in the hash as a value of 1.
+
+An already implemented data source is the European Central Bank and can be used like
+
+```ruby
+my_exchange_rate = ExchangeRate.new(ECBRatesDataSource.new)
+```
 
 ## Development
 
