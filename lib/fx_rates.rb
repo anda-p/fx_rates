@@ -27,7 +27,7 @@ module FxRates
       # this goes in the exchange_rate class
       def at(date, from_ccy, to_ccy)
           if date.nil?
-            raise ArgumentError "A date needs to be specified"
+            raise ArgumentError.new("A date needs to be specified")
           end
             
           from_ccy_up = from_ccy.upcase
@@ -42,7 +42,7 @@ module FxRates
           if !day_data.nil?
               from_rate = day_data[from_ccy_up] 
               to_rate = day_data[to_ccy_up]
-      
+
               if !from_rate.nil? && !to_rate.nil?
                   return BigDecimal.new(to_rate).div(BigDecimal.new(from_rate))
               else raise RateNotFoundError.new(from_ccy, to_ccy)
