@@ -46,16 +46,16 @@ All data sources must extend the RatesDataSource class and provide the following
 load_rates
 ```
 
-Refreshes the rates data 
+which refreshes the rates data 
 
 ```ruby
 rates
 ```
 
-Returns a Hash of rates in the format
+which returns a Hash of rates in the format
 
 ```ruby
-{date1 => {ccy1 => rate1, ccy2 => rate2}, {date2 => {ccy1 => rate1, ccy2 => rate2}}}
+{date1 => {ccy1 => rate1, ccy2 => rate2}, date2 => {ccy1 => rate1, ccy2 => rate2}}
 ```
 where the date keys are of type Date and currency and rate are strings.
 

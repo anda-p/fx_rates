@@ -34,4 +34,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_dependency 'nokogiri', '~> 1.6', '>= 1.6.7.2'
+  spec.add_dependency 'concurrent-ruby', '~> 1.0', '>= 1.0.5'
+
 end

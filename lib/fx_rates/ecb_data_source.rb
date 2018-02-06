@@ -1,5 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
+require 'concurrent'
 
 require_relative 'rates_data_source'
 
@@ -9,7 +10,7 @@ class ECBRatesDataSource < RatesDataSource
     attr_reader :rates
 
     def initialize
-        @rates = Hash.new
+        @rates = Concurrent::Hash.new
         @base_ccy = "EUR"
     end
 
@@ -20,7 +21,7 @@ class ECBRatesDataSource < RatesDataSource
             date = day_node.xpath("@time")
             parsed_date = Date.strptime(date.to_s, '%Y-%m-%d')
 
-            @rates[parsed_date] = Hash.new
+            @rates[parsed_date] = Concurrent::Hash.new
             # the base currency will always have rate 1 with itself
             @rates[parsed_date][@base_ccy] = "1"
 
