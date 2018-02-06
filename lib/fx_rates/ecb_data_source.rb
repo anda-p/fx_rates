@@ -10,9 +10,10 @@ class ECBRatesDataSource < RatesDataSource
 
     def initialize
         @rates = Hash.new
+        @base_ccy = "EUR"
     end
 
-    def load_data
+    def load_rates
         doc = Nokogiri::XML(open(RATES_URL))
 
         doc.xpath("//xmlns:Cube[@time]").each do |day_node|

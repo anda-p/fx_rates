@@ -3,7 +3,7 @@ class RatesDataSource
         raise NotImplementedError
     end
 
-    def load_data
+    def load_rates
         raise NotImplementedError
     end 
 end 
