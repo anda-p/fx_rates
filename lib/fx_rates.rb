@@ -24,10 +24,7 @@ module FxRates
       attr_reader :rates_data_source
 
       # Saves the rates data sources and loads the rates
-      # Raises a TypeError if the argument does not extend RatesDataSource
       def initialize(rates_data_source)
-          raise TypeError unless rates_data_source.is_a? RatesDataSource
-          
           @rates_data_source = rates_data_source
           @rates_data_source.load_rates
       end
