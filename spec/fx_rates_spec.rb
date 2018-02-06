@@ -13,12 +13,11 @@ RSpec.describe FxRates do
     expect(tested.at(@date, "USD", "USD")).to eql(BigDecimal("1"))
   end
 
-  it "returns counter ccy rate if from currency is base currency" do
-    allow(@data_src_double).to receive(:rates).and_return({@date => {"ZAR" => "3.14"}})
-    allow(@data_src_double).to receive(:base_ccy).and_return("EUR")
+  it "converts correctly" do
+    allow(@data_src_double).to receive(:rates).and_return({@date => {"ZAR" => "4", "USD" => "2"}})
 
     tested = FxRates::ExchangeRate.new(@data_src_double)
 
-    expect(tested.at(@date, "EUR", "ZAR")).to eql(BigDecimal("3.14"))
+    expect(tested.at(@date, "USD", "ZAR")).to eq(BigDecimal("2"))
   end
 end

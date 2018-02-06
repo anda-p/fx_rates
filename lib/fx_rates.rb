@@ -26,41 +26,30 @@ module FxRates
 
       # this goes in the exchange_rate class
       def at(date, from_ccy, to_ccy)
+          if date.nil?
+            raise ArgumentError "A date needs to be specified"
+          end
+            
           from_ccy_up = from_ccy.upcase
           to_ccy_up = to_ccy.upcase
 
           if (from_ccy_up == to_ccy_up)
-              return BigDecimal.new("1.0")
+              return BigDecimal.new("1")
           end
 
           day_data = @rates_data_source.rates[date]
-          base_ccy = @rates_data_source.base_ccy
           
           if !day_data.nil?
               from_rate = day_data[from_ccy_up] 
               to_rate = day_data[to_ccy_up]
-
-              if from_ccy_up == base_ccy
-                  if !to_rate.nil?
-                      return BigDecimal(day_data[to_ccy_up])
-                  else raise RateNotFoundError.new(from_ccy, to_ccy)
-                  end    
-              elsif to_ccy_up == base_ccy
-                  if !from_rate.nil?
-                      return BigDecimal.new("1.0").div(BigDecimal.new(from_rate))
-                  else raise RateNotFoundError.new(from_ccy, to_ccy)
-                  end    
-              else        
-                  if !from_rate.nil? && !to_rate.nil?
-                      return BigDecimal.new(to_rate).div(BigDecimal.new(from_rate))
-                  else raise RateNotFoundError.new(from_ccy, to_ccy)
-                  end
-              end    
+      
+              if !from_rate.nil? && !to_rate.nil?
+                  return BigDecimal.new(to_rate).div(BigDecimal.new(from_rate))
+              else raise RateNotFoundError.new(from_ccy, to_ccy)
+              end
           else
               raise RateNotFoundError.new(from_ccy, to_ccy)
           end
-
-          return nil
       end
   end
 end
