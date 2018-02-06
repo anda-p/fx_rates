@@ -4,16 +4,23 @@ require 'concurrent'
 
 require_relative 'rates_data_source'
 
+# Class representing a data source for exchange rates from the European Central Bank
 class ECBRatesDataSource < RatesDataSource
+    # The URL to the ECB rates data
     RATES_URL = "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
     
+    # All the rates data
     attr_reader :rates
 
+    # Initializes the rates data as a thread-safe Hash and sets the base ccy which 
+    # is EUR in this case. The base currency is used to artificially add a rate of 1 
+    # in the data set (in case it's not present) to make the calculation easier
     def initialize
         @rates = Concurrent::Hash.new
         @base_ccy = "EUR"
     end
 
+    # Downloads and parses the rates data from the ECB website
     def load_rates
         doc = Nokogiri::XML(open(RATES_URL))
 

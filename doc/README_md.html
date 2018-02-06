@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>README - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-FxRates">FxRates</a>
+    <li><a href="#label-Installation">Installation</a>
+    <li><a href="#label-Usage">Usage</a>
+    <li><a href="#label-Configuring+the+rates+data+source">Configuring the rates data source</a>
+    <li><a href="#label-Development">Development</a>
+    <li><a href="#label-Contributing">Contributing</a>
+    <li><a href="#label-License">License</a>
+    <li><a href="#label-Code+of+Conduct">Code of Conduct</a>
+  </ul>
+</div>
+
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./CODE_OF_CONDUCT_md.html">CODE_OF_CONDUCT</a>
+  
+    <li><a href="./Gemfile.html">Gemfile</a>
+  
+    <li><a href="./Gemfile_lock.html">Gemfile.lock</a>
+  
+    <li><a href="./LICENSE_txt.html">LICENSE</a>
+  
+    <li><a href="./README_md.html">README</a>
+  
+    <li><a href="./Rakefile.html">Rakefile</a>
+  
+    <li><a href="./bin/setup.html">setup</a>
+  
+    <li><a href="./fx_rates_gemspec.html">fx_rates.gemspec</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page README.md">
+
+<h1 id="label-FxRates"><a href="FxRates.html">FxRates</a><span><a href="#label-FxRates">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p>A library for getting foreign exchange rates.</p>
+
+<h2 id="label-Installation">Installation<span><a href="#label-Installation">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Add this line to your application&#39;s Gemfile:</p>
+
+<pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;fx_rates&#39;</span>
+</pre>
+
+<p>And then execute:</p>
+
+<pre>$ bundle</pre>
+
+<p>Or install it yourself as:</p>
+
+<pre>$ gem install fx_rates</pre>
+
+<h2 id="label-Usage">Usage<span><a href="#label-Usage">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>For getting an exchange rate:</p>
+
+<pre class="ruby"><span class="ruby-identifier">my_exchange_rate</span> = <span class="ruby-constant">FxRates</span><span class="ruby-operator">::</span><span class="ruby-constant">ExchangeRate</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">MyRatesDataSource</span>.<span class="ruby-identifier">new</span>)
+
+<span class="ruby-identifier">my_exchange_rate</span>.<span class="ruby-identifier">at</span>(<span class="ruby-constant">Date</span>.<span class="ruby-identifier">today</span>, <span class="ruby-string">&quot;USD&quot;</span>, <span class="ruby-string">&quot;GBP&quot;</span>)
+</pre>
+
+<p>All arguments should be specified or an ArgumentError will be raised.</p>
+
+<p>If there is no rate for a specified date or currency, a RateNotFoundError
+will be raised.</p>
+
+<h3 id="label-Configuring+the+rates+data+source">Configuring the rates data source<span><a href="#label-Configuring+the+rates+data+source">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>As the data source for exchange rates can change, this should be passed in
+as an argument when creating an ExchangeRate instance:</p>
+
+<pre class="ruby"><span class="ruby-identifier">my_exchange_rate</span> = <span class="ruby-constant">ExchangeRate</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">MyRatesDataSource</span>.<span class="ruby-identifier">new</span>)
+</pre>
+
+<p>All data sources must extend the <a
+href="RatesDataSource.html">RatesDataSource</a> class and provide the
+following methods.</p>
+
+<p>An already implemented data source is the European Central Bank and can be
+used like</p>
+
+<pre class="ruby"><span class="ruby-identifier">my_exchange_rate</span> = <span class="ruby-constant">ExchangeRate</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">ECBRatesDataSource</span>.<span class="ruby-identifier">new</span>)
+</pre>
+
+<pre class="ruby"><span class="ruby-identifier">load_rates</span>
+</pre>
+
+<p>which refreshes the rates data</p>
+
+<pre class="ruby"><span class="ruby-identifier">rates</span>
+</pre>
+
+<p>which returns a Hash of rates in the format</p>
+
+<pre class="ruby">{<span class="ruby-identifier">date1</span> <span class="ruby-operator">=&gt;</span> {<span class="ruby-identifier">ccy1</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">rate1</span>, <span class="ruby-identifier">ccy2</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">rate2</span>}, <span class="ruby-identifier">date2</span> <span class="ruby-operator">=&gt;</span> {<span class="ruby-identifier">ccy1</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">rate1</span>, <span class="ruby-identifier">ccy2</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">rate2</span>}}
+</pre>
+
+<p>where the date keys are of type Date and currency and rate are strings.</p>
+
+<p>The base currency for a data source that all the other rates are calculated
+relatively to should also appear in the hash as a value of 1.</p>
+
+<h2 id="label-Development">Development<span><a href="#label-Development">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>After checking out the repo, run <code>bin/setup</code> to install
+dependencies. Then, run <code>rake spec</code> to run the tests. You can
+also run <code>bin/console</code> for an interactive prompt that will allow
+you to experiment.</p>
+
+<p>To install this gem onto your local machine, run <code>bundle exec rake
+install</code>. To release a new version, update the version number in
+<code>version.rb</code>, and then run <code>bundle exec rake
+release</code>, which will create a git tag for the version, push git
+commits and tags, and push the <code>.gem</code> file to <a
+href="https://rubygems.org">rubygems.org</a>.</p>
+
+<h2 id="label-Contributing">Contributing<span><a href="#label-Contributing">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Bug reports and pull requests are welcome on GitHub at <a
+href="https://github.com/[USERNAME]/fx_rates">github.com/[USERNAME]/fx_rates</a>.
+This project is intended to be a safe, welcoming space for collaboration,
+and contributors are expected to adhere to the <a
+href="http://contributor-covenant.org">Contributor Covenant</a> code of
+conduct.</p>
+
+<h2 id="label-License">License<span><a href="#label-License">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>The gem is available as open source under the terms of the <a
+href="https://opensource.org/licenses/MIT">MIT License</a>.</p>
+
+<h2 id="label-Code+of+Conduct">Code of Conduct<span><a href="#label-Code+of+Conduct">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Everyone interacting in the <a href="FxRates.html">FxRates</a> project’s
+codebases, issue trackers, chat rooms and mailing lists is expected to
+follow the {code of
+conduct}[https://github.com/[USERNAME]/fx_rates/blob/master/CODE_OF_CONDUCT.md].</p>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

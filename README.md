@@ -37,10 +37,16 @@ If there is no rate for a specified date or currency, a RateNotFoundError will b
 As the data source for exchange rates can change, this should be passed in as an argument when creating an ExchangeRate instance:
 
 ```ruby
-my_exhange_rate = ExchangeRate.new(MyRatesDataSource.new)
+my_exchange_rate = ExchangeRate.new(MyRatesDataSource.new)
 ```
 
-All data sources must extend the RatesDataSource class and provide the following methods
+All data sources must extend the RatesDataSource class and provide the following methods.
+
+An already implemented data source is the European Central Bank and can be used like
+
+```ruby
+my_exchange_rate = ExchangeRate.new(ECBRatesDataSource.new)
+```
 
 ```ruby
 load_rates
