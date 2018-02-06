@@ -5,6 +5,10 @@ require "fx_rates/rates_data_source"
 require "bigdecimal"
 
 module FxRates
+  ##
+  # Raised when a rate for the from_ccy or to_ccy 
+  # is not found in the data or there is no data
+  # for a particular date 
   class RateNotFoundError < StandardError
     def initialize(from_ccy, to_ccy)
         @from_ccy = from_ccy
@@ -16,6 +20,8 @@ module FxRates
     end
   end
 
+  ##
+  # Gets FX rates using a supplied data source
   class ExchangeRate
       attr_reader :rates_data_source
 
@@ -24,6 +30,18 @@ module FxRates
           @rates_data_source.load_rates
       end
 
+      # Returns the exchange rate between from_ccy to to_ccy on the specified date
+      # 
+      # An ArgumentError is raised when either of the arguments is nil
+      # A RateNotFoundError is raised when there are no rates for the supplied date
+      # or any of the currencies is not found
+      #
+      # Params:
+      # @param [Date] date object specifying the date to get the exchange rate for
+      # @param [String] from_currency the currency to convert from. Format should be "USD"
+      # @param [String] to_currency the currency to convert from. Format should be "USD"
+      # 
+      # @return [BigDecimal]
       def at(date, from_ccy, to_ccy)
           if date.nil? || from_ccy.nil? || to_ccy.nil?
             raise ArgumentError.new("All arguments must be specified")
@@ -51,6 +69,7 @@ module FxRates
           end
       end
 
+      # Loads the rates data from the supplied data source
       def load_rates
         @rates_data_source.load_rates
       end  
