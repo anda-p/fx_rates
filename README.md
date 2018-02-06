@@ -1,8 +1,6 @@
 # FxRates
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/fx_rates`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+A library for getting foreign exchange rates.
 
 ## Installation
 
@@ -22,7 +20,46 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+For getting an exchange rate:
+
+```ruby
+my_exchange_rate = FxRates::ExchangeRate.new(MyRatesDataSource.new)
+
+my_exchange_rate.at(Date.today, "USD", "GBP")
+```
+
+All arguments should be specified or an ArgumentError will be raised.
+
+If there is no rate for a specified date or currency, a RateNotFoundError will be raised.
+
+### Configuring the rates data source
+
+As the data source for exchange rates can change, this should be passed in as an argument when creating an ExchangeRate instance:
+
+```ruby
+my_exhange_rate = ExchangeRate.new(MyRatesDataSource.new)
+```
+
+All data sources must extend the RatesDataSource class and provide the following methods
+
+```ruby
+load_rates
+```
+
+Refreshes the rates data 
+
+```ruby
+rates
+```
+
+Returns a Hash of rates in the format
+
+```ruby
+{date1 => {ccy1 => rate1, ccy2 => rate2}, {date2 => {ccy1 => rate1, ccy2 => rate2}}}
+```
+where the date keys are of type Date and currency and rate are strings.
+
+The base currency for a data source that all the other rates are calculated relatively to should also appear in the hash as a value of 1.
 
 ## Development
 
