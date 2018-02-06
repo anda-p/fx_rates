@@ -1,6 +1,8 @@
 require "fx_rates/version"
-#require "fx_rates/ecb_data_source"
-#require "fx_rates/rates_data_source"
+require "fx_rates/ecb_data_source"
+require "fx_rates/rates_data_source"
+
+require "bigdecimal"
 
 module FxRates
   class RateNotFoundError < StandardError
@@ -19,10 +21,11 @@ module FxRates
 
       def initialize(rates_data_source)
           @rates_data_source = rates_data_source
+          @rates_data_source.load_data
       end
 
       # this goes in the exchange_rate class
-      def calculate_rate(date, from_ccy, to_ccy)
+      def at(date, from_ccy, to_ccy)
           from_ccy_up = from_ccy.upcase
           to_ccy_up = to_ccy.upcase
 
@@ -30,7 +33,7 @@ module FxRates
               return BigDecimal.new("1.0")
           end
 
-          day_data = @rates_data_source.rates_by_date(date)
+          day_data = @rates_data_source.rates[date]
           base_ccy = @rates_data_source.base_ccy
           
           if !day_data.nil?
@@ -58,6 +61,6 @@ module FxRates
           end
 
           return nil
-      end     
+      end
   end
 end
