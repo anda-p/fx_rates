@@ -39,5 +39,9 @@ class ECBRatesDataSource < RatesDataSource
                 @rates[parsed_date][currency] = rate
             end    
         end 
-    end        
+    end
+    
+    def rate_for_date_and_ccy(date, ccy)
+        @rates[date][ccy]
+    end
 end

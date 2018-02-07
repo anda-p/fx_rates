@@ -33,7 +33,7 @@ RSpec.describe FxRates::ExchangeRate do
     end
 
     it "raises error when there is no rate for from currency" do
-      allow(@data_src_double).to receive(:rates).and_return({@date => {"ZAR" => "4", "EUR" => "1"}})
+      allow(@data_src_double).to receive(:rate_for_date_and_ccy).and_return(nil)
 
       tested = FxRates::ExchangeRate.new(@data_src_double)
 
@@ -41,24 +41,7 @@ RSpec.describe FxRates::ExchangeRate do
     end
 
     it "raises error when there is no rate for to currency" do
-      allow(@data_src_double).to receive(:rates).and_return({@date => {"ZAR" => "4", "EUR" => "1"}})
-
-      tested = FxRates::ExchangeRate.new(@data_src_double)
-
-      expect{tested.at(@date, "ZAR", "CHF")}.to raise_error(FxRates::RateNotFoundError)
-    end
-
-    it "raises error when there are no rates for the supplied date" do
-      allow(@data_src_double).to receive(:rates).and_return({@date => {"ZAR" => "4", "EUR" => "1"}})
-
-      tested = FxRates::ExchangeRate.new(@data_src_double)
-
-      non_existing_date = Date.strptime("2018-01-01", '%Y-%m-%d')
-      expect{tested.at(non_existing_date, "EUR", "ZAR")}.to raise_error(FxRates::RateNotFoundError)
-    end
-
-    it "raises error when empty dataset" do
-      allow(@data_src_double).to receive(:rates).and_return({})
+      allow(@data_src_double).to receive(:rate_for_date_and_ccy).and_return(nil)
 
       tested = FxRates::ExchangeRate.new(@data_src_double)
 
@@ -66,7 +49,8 @@ RSpec.describe FxRates::ExchangeRate do
     end
 
     it "converts correctly for known currencies" do
-      allow(@data_src_double).to receive(:rates).and_return({@date => {"ZAR" => "1", "USD" => "2"}})
+      allow(@data_src_double).to receive(:rate_for_date_and_ccy).with(@date, "USD").and_return("2")
+      allow(@data_src_double).to receive(:rate_for_date_and_ccy).with(@date, "ZAR").and_return("1")
 
       tested = FxRates::ExchangeRate.new(@data_src_double)
 
@@ -74,7 +58,8 @@ RSpec.describe FxRates::ExchangeRate do
     end
 
     it "is case insensitive for currencies" do
-      allow(@data_src_double).to receive(:rates).and_return({@date => {"ZAR" => "4", "EUR" => "2"}})
+      allow(@data_src_double).to receive(:rate_for_date_and_ccy).with(@date, "EUR").and_return("2")
+      allow(@data_src_double).to receive(:rate_for_date_and_ccy).with(@date, "ZAR").and_return("4")
 
       tested = FxRates::ExchangeRate.new(@data_src_double)
 
