@@ -42,6 +42,6 @@ class ECBRatesDataSource < RatesDataSource
     end
     
     def rate_for_date_and_ccy(date, ccy)
-        @rates[date][ccy]
+        @rates[date] ? @rates[date][ccy] : nil
     end
 end
