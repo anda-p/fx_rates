@@ -95,6 +95,8 @@
   </section>
 
   
+  
+  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -146,18 +148,14 @@ href="../RatesDataSource.html">RatesDataSource</a></p>
 
         <div class="method-description">
           
-          <p>Saves the rates data sources and loads the rates Raises a TypeError if the
-argument does not extend <a
-href="../RatesDataSource.html">RatesDataSource</a></p>
+          <p>Saves the rates data sources and loads the rates</p>
           
           
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/fx_rates.rb, line 28</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">rates_data_source</span>)
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">rates_data_source</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">RatesDataSource</span>
-    
+            <pre><span class="ruby-comment"># File lib/fx_rates.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">rates_data_source</span>)
     <span class="ruby-ivar">@rates_data_source</span> = <span class="ruby-identifier">rates_data_source</span>
     <span class="ruby-ivar">@rates_data_source</span>.<span class="ruby-identifier">load_rates</span>
 <span class="ruby-keyword">end</span></pre>
@@ -198,6 +196,11 @@ href="../RatesDataSource.html">RatesDataSource</a></p>
 href="RateNotFoundError.html">RateNotFoundError</a> is raised when there
 are no rates for the supplied date or any of the currencies is not found</p>
 
+<p>The currencies are case insensitive so <a
+href="ExchangeRate.html#method-i-at">#at</a>(Day.today, “eur”, “usd”) will
+produce the same result as <a
+href="ExchangeRate.html#method-i-at">#at</a>(Day.today, “EUR”, “USD”)</p>
+
 <p>Params:</p>
 <dl class="rdoc-list label-list"><dt>date
 <dd>
@@ -217,11 +220,11 @@ are no rates for the supplied date or any of the currencies is not found</p>
           
           <div class="method-source-code" id="at-source">
             <pre><span class="ruby-comment"># File lib/fx_rates.rb, line 47</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">at</span>(<span class="ruby-identifier">date</span>, <span class="ruby-identifier">from_ccy</span>, <span class="ruby-identifier">to_ccy</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">at</span>(<span class="ruby-identifier">date</span>, <span class="ruby-identifier">from_ccy</span>, <span class="ruby-identifier">to_ccy</span>)
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">date</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">from_ccy</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">to_ccy</span>.<span class="ruby-identifier">nil?</span>
-      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;All arguments must be specified&quot;</span>)
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;All arguments must be specified&quot;</span>)
     <span class="ruby-keyword">end</span>
-      
+    
     <span class="ruby-identifier">from_ccy_upcase</span> = <span class="ruby-identifier">from_ccy</span>.<span class="ruby-identifier">upcase</span>
     <span class="ruby-identifier">to_ccy_upcase</span> = <span class="ruby-identifier">to_ccy</span>.<span class="ruby-identifier">upcase</span>
 
@@ -229,18 +232,12 @@ are no rates for the supplied date or any of the currencies is not found</p>
         <span class="ruby-keyword">return</span> <span class="ruby-constant">BigDecimal</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;1&quot;</span>)
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-identifier">day_data</span> = <span class="ruby-ivar">@rates_data_source</span>.<span class="ruby-identifier">rates</span>[<span class="ruby-identifier">date</span>]
-    
-    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">day_data</span>.<span class="ruby-identifier">nil?</span>
-        <span class="ruby-identifier">from_rate</span> = <span class="ruby-identifier">day_data</span>[<span class="ruby-identifier">from_ccy_upcase</span>] 
-        <span class="ruby-identifier">to_rate</span> = <span class="ruby-identifier">day_data</span>[<span class="ruby-identifier">to_ccy_upcase</span>]
+    <span class="ruby-identifier">from_rate</span> = <span class="ruby-ivar">@rates_data_source</span>.<span class="ruby-identifier">rate_for_date_and_ccy</span>(<span class="ruby-identifier">date</span>, <span class="ruby-identifier">from_ccy_upcase</span>)
+    <span class="ruby-identifier">to_rate</span> = <span class="ruby-ivar">@rates_data_source</span>.<span class="ruby-identifier">rate_for_date_and_ccy</span>(<span class="ruby-identifier">date</span>, <span class="ruby-identifier">to_ccy_upcase</span>)
 
-        <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">from_rate</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">to_rate</span>.<span class="ruby-identifier">nil?</span>
-            <span class="ruby-keyword">return</span> <span class="ruby-constant">BigDecimal</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">to_rate</span>) <span class="ruby-operator">/</span> <span class="ruby-constant">BigDecimal</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">from_rate</span>)
-        <span class="ruby-keyword">else</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">RateNotFoundError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">from_ccy</span>, <span class="ruby-identifier">to_ccy</span>)
-        <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">raise</span> <span class="ruby-constant">RateNotFoundError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">from_ccy</span>, <span class="ruby-identifier">to_ccy</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">from_rate</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">to_rate</span>.<span class="ruby-identifier">nil?</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-constant">BigDecimal</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">to_rate</span>) <span class="ruby-operator">/</span> <span class="ruby-constant">BigDecimal</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">from_rate</span>)
+    <span class="ruby-keyword">else</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">RateNotFoundError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">from_ccy</span>, <span class="ruby-identifier">to_ccy</span>)
     <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -272,9 +269,9 @@ are no rates for the supplied date or any of the currencies is not found</p>
 
           
           <div class="method-source-code" id="load_rates-source">
-            <pre><span class="ruby-comment"># File lib/fx_rates.rb, line 75</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">load_rates</span>
-  <span class="ruby-ivar">@rates_data_source</span>.<span class="ruby-identifier">load_rates</span>
+            <pre><span class="ruby-comment"># File lib/fx_rates.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">load_rates</span>
+    <span class="ruby-ivar">@rates_data_source</span>.<span class="ruby-identifier">load_rates</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -293,8 +290,8 @@ are no rates for the supplied date or any of the currencies is not found</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
