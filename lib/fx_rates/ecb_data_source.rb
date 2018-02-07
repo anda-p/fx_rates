@@ -24,6 +24,8 @@ class ECBRatesDataSource < RatesDataSource
     def load_rates
         doc = Nokogiri::XML(open(RATES_URL))
 
+        @rates = Concurrent::Hash.new
+
         doc.xpath("//xmlns:Cube[@time]").each do |day_node|
             date = day_node.xpath("@time")
             parsed_date = Date.strptime(date.to_s, '%Y-%m-%d')

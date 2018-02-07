@@ -1,7 +1,6 @@
 require "bigdecimal"
 
 RSpec.describe FxRates::ExchangeRate do
-  describe "#at" do
     before(:each) do
       @date = Date.strptime("2018-02-01", '%Y-%m-%d')
       @data_src_double = double("Rates Data Source")
@@ -65,5 +64,4 @@ RSpec.describe FxRates::ExchangeRate do
 
       expect(tested.at(@date, "eur", "ZaR")).to eq(BigDecimal("2"))
     end
-  end
 end
